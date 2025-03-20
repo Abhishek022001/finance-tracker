@@ -9,25 +9,35 @@ export default function Home() {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [category, setCategory] = useState(categories[0]);
-  const [filter, setFilter] = useState("all");
-  const [darkMode, setDarkMode] = useState(false);
   const [budgets, setBudgets] = useState({});
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
 
+  // Load saved data from localStorage
   useEffect(() => {
     const savedTransactions = JSON.parse(localStorage.getItem("transactions"));
     if (savedTransactions) setTransactions(savedTransactions);
 
     const savedBudgets = JSON.parse(localStorage.getItem("budgets"));
     if (savedBudgets) setBudgets(savedBudgets);
+
+    const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
+    if (savedDarkMode !== null) setDarkMode(savedDarkMode);
   }, []);
 
+  // Save transactions to localStorage
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
 
+  // Save budgets to localStorage
   useEffect(() => {
     localStorage.setItem("budgets", JSON.stringify(budgets));
   }, [budgets]);
+
+  // Save dark mode preference to localStorage
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
 
   const addTransaction = (type) => {
     if (!amount || !description || !date) return alert("Please enter all details!");
@@ -49,6 +59,15 @@ export default function Home() {
 
   const setBudget = (cat, value) => {
     setBudgets({ ...budgets, [cat]: parseFloat(value) || 0 });
+  };
+
+  const resetTracker = () => {
+    if (confirm("Are you sure you want to reset everything?")) {
+      setTransactions([]);
+      setBudgets({});
+      localStorage.removeItem("transactions");
+      localStorage.removeItem("budgets");
+    }
   };
 
   const totalExpense = transactions.filter((t) => t.type === "expense").reduce((acc, t) => acc + t.amount, 0);
@@ -74,7 +93,7 @@ export default function Home() {
   return (
     <div className={`${darkMode ? "dark bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center p-8`}>
       {/* Dark Mode Toggle */}
-      <button className="absolute top-4 right-4 bg-gray-800 text-white p-2 rounded dark:bg-gray-200 dark:text-black"
+      <button className="absolute top-4 right-4 bg-gray-800 text-white p-2 rounded dark:bg-gray-200 dark:text-black cursor-pointer"
         onClick={() => setDarkMode(!darkMode)}>
         {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </button>
@@ -106,9 +125,12 @@ export default function Home() {
           ))}
         </select>
         <div className="flex gap-4">
-          <button className="bg-green-500 text-white p-2 rounded" onClick={() => addTransaction("income")}>Add Income</button>
-          <button className="bg-red-500 text-white p-2 rounded" onClick={() => addTransaction("expense")}>Add Expense</button>
+          <button className="bg-green-500 text-white p-2 rounded cursor-pointer" onClick={() => addTransaction("income")}>Add Income</button>
+          <button className="bg-red-500 text-white p-2 rounded cursor-pointer" onClick={() => addTransaction("expense")}>Add Expense</button>
         </div>
+        <button className="mt-2 bg-gray-500 text-white p-2 rounded cursor-pointer" onClick={resetTracker}>
+          🔄 Reset Tracker
+        </button>
       </div>
 
       {/* Budget Input Section */}
@@ -126,7 +148,12 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Monthly Expenses Bar Chart */}
+      {/* Reset Tracker Button */}
+      {/* <button className="mt-6 bg-gray-500 text-white p-2 rounded cursor-pointer" onClick={resetTracker}>
+        🔄 Reset Tracker
+      </button> */}
+
+      {/* Charts */}
       <div className="w-full max-w-lg mt-6">
         <h2 className="text-xl font-semibold text-center">Monthly Expenses</h2>
         <ResponsiveContainer width="100%" height={250}>
