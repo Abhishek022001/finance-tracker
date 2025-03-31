@@ -101,47 +101,49 @@ export default function Home() {
       <h1 className="text-3xl font-bold">Finance Tracker 📊</h1>
 
       {/* Dashboard Summary */}
-      <div className="mt-6 text-center">
+      <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-white/20 text-center mt-6">
         <h2 className="text-xl font-semibold">Balance: ₹{balance}</h2>
         <p className="text-green-500">Income: ₹{totalIncome}</p>
         <p className="text-red-500">Expenses: ₹{totalExpense}</p>
       </div>
 
       {/* Transaction Input Form */}
-      <div className="mt-6 flex flex-col gap-4">
+      <div className="mt-6 flex flex-col gap-4 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg">
+
         <input type="number" placeholder="Enter Amount" value={amount} onChange={(e) => setAmount(e.target.value)}
-          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white"
+          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-400"
         />
         <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}
-          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white"
+          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-400"
         />
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white"
+          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-400"
         />
         <select value={category} onChange={(e) => setCategory(e.target.value)}
-          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white">
+          className="p-2 border rounded w-60 bg-white text-black dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-400">
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
         <div className="flex gap-4">
-          <button className="bg-green-500 text-white p-2 rounded cursor-pointer" onClick={() => addTransaction("income")}>Add Income</button>
-          <button className="bg-red-500 text-white p-2 rounded cursor-pointer" onClick={() => addTransaction("expense")}>Add Expense</button>
+          <button className="bg-green-500 text-white p-2 rounded cursor-pointer hover:scale-105 bg-gradient-to-r from-green-500 to-green-800 transition-transform " onClick={() => addTransaction("income")}>Add Income</button>
+          <button className="bg-red-500 text-white p-2 rounded cursor-pointer hover:scale-105 bg-gradient-to-r from-red-500 to-red-800 transition-transform" onClick={() => addTransaction("expense")}>Add Expense</button>
         </div>
-        <button className="mt-2 bg-gray-500 text-white p-2 rounded cursor-pointer" onClick={resetTracker}>
+        {/* Reset tracker */}
+        <button className="mt-2 bg-black text-white p-2 rounded cursor-pointer" onClick={resetTracker}>
           🔄 Reset Tracker
         </button>
       </div>
 
       {/* Budget Input Section */}
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col gap-4 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-center">Set Monthly Budgets</h2>
         <div className="flex flex-col gap-3 mt-3">
           {categories.map((cat) => (
             <div key={cat} className="flex items-center gap-3">
               <span className="w-24">{cat}</span>
               <input type="number" value={budgets[cat] || ""} onChange={(e) => setBudget(cat, e.target.value)}
-                className="p-2 border rounded w-32 bg-white text-black dark:bg-gray-800 dark:text-white"
+                className="p-2 border rounded w-32 bg-white text-black dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-400"
               />
             </div>
           ))}
@@ -154,7 +156,9 @@ export default function Home() {
       </button> */}
 
       {/* Charts */}
-      <div className="w-full max-w-lg mt-6">
+
+      {/* Montly Expenses Chart */}
+      <div className="mt-6 flex flex-col gap-4 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg w-full max-w-xl">
         <h2 className="text-xl font-semibold text-center">Monthly Expenses</h2>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={pieData}>
@@ -167,7 +171,7 @@ export default function Home() {
       </div>
 
       {/* Category-wise Pie Chart */}
-      <div className="w-full max-w-lg mt-6">
+      <div className="mt-6 flex flex-col gap-4 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg w-full max-w-xl">
         <h2 className="text-xl font-semibold text-center">Expense Breakdown</h2>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
@@ -183,7 +187,7 @@ export default function Home() {
       </div>
 
       {/* Budget vs Actual Comparison Chart */}
-      <div className="w-full max-w-lg mt-6">
+      <div className="mt-6 flex flex-col gap-4 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg w-full max-w-xl">
         <h2 className="text-xl font-semibold text-center">Budget vs Actual</h2>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={budgetComparisonData}>
