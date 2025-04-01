@@ -78,11 +78,19 @@ export default function Home() {
     acc[t.category] = (acc[t.category] || 0) + t.amount;
     return acc;
   }, {});
-
-  const pieData = Object.entries(categoryExpenses).map(([key, value]) => ({
+  
+  const defaultPieData = [
+    {name: "Food", value: 60},
+    {name: "Travel", value: 20},
+    {name: "Shopping", value: 40},
+    {name: "Bills", value: 10},
+    {name: "Other", value: 20}
+  ]
+  const pieData = Object.entries(categoryExpenses).length > 0 ? Object.entries(categoryExpenses).map(([key, value]) => ({
     name: key,
     value,
-  }));
+  }))
+  : defaultPieData;
 
   const budgetComparisonData = categories.map((cat) => ({
     name: cat,
@@ -175,8 +183,8 @@ export default function Home() {
         <h2 className="text-xl font-semibold text-center">Expense Breakdown</h2>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
-            <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-              {pieData.map((_, index) => (
+            <Pie data={pieData.length > 0 ? pieData : defaultPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+              {(pieData.length > 0 ? pieData : defaultPieData).map((_, index) => (
                 <Cell key={`cell-${index}`} fill={["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9966FF"][index % 5]} />
               ))}
             </Pie>
